@@ -1,7 +1,12 @@
 streamlit
 groq
-gTTS
-pytest
-pytest-mock
-duckduckgo-search
+supabase
+pandas
+plotly
+gtts
+sqlalchemy
+psycopg2-binary
 Pillow
+selenium
+webdriver-manager
+pytest
