@@ -1,0 +1,74 @@
+[
+    {
+        "id": "77a2633c-b581-436b-aee4-befca8f8baa2",
+        "category": "Top",
+        "gender": "Women's Fashion",
+        "image_path": "assets/wardrobe\\184ee8bc-5e19-4ec7-8883-4a7da1211e76.png",
+        "filename": "184ee8bc-5e19-4ec7-8883-4a7da1211e76.png",
+        "added_at": 1763900641.7579722
+    },
+    {
+        "id": "e462c006-918e-4f7e-a554-e92009d4f117",
+        "category": "Top",
+        "gender": "Women's Fashion",
+        "image_path": "assets/wardrobe\\09738040-c777-4fb0-aa0b-ca945f95e600.png",
+        "filename": "09738040-c777-4fb0-aa0b-ca945f95e600.png",
+        "added_at": 1763900696.8279397
+    },
+    {
+        "id": "c16b40ad-e27b-45a2-a4dd-ec2a4b2c17f1",
+        "category": "Lehenga",
+        "gender": "Women's Fashion",
+        "image_path": "assets/wardrobe\\0645488a-7e8b-4da8-8381-bf2a882ce654.png",
+        "filename": "0645488a-7e8b-4da8-8381-bf2a882ce654.png",
+        "added_at": 1763900771.5048327
+    },
+    {
+        "id": "d07ae3ad-e9c8-4189-809e-90d6352649cf",
+        "category": "Saree",
+        "gender": "Women's Fashion",
+        "image_path": "assets/wardrobe\\ed3aa025-7b09-4468-a6f6-46bf1d502bb8.png",
+        "filename": "ed3aa025-7b09-4468-a6f6-46bf1d502bb8.png",
+        "added_at": 1763900875.8302605
+    },
+    {
+        "id": "fde4c8ed-e8df-48fc-9998-9b0faca71234",
+        "category": "Lehenga",
+        "gender": "Women's Fashion",
+        "image_path": "assets/wardrobe\\db07f205-a1a8-425f-a324-e428584f2ccf.png",
+        "filename": "db07f205-a1a8-425f-a324-e428584f2ccf.png",
+        "added_at": 1763900892.3684888
+    },
+    {
+        "id": "820f8a56-2038-4e31-ad4f-712852890d4d",
+        "category": "Heels",
+        "gender": "Women's Fashion",
+        "image_path": "assets/wardrobe\\32331a32-d4b0-44e0-a8af-e067d6495c5a.png",
+        "filename": "32331a32-d4b0-44e0-a8af-e067d6495c5a.png",
+        "added_at": 1763901046.0980415
+    },
+    {
+        "id": "e328ba88-5212-4fae-9842-c8d12629403e",
+        "category": "Heels",
+        "gender": "Women's Fashion",
+        "image_path": "assets/wardrobe\\7d86ace3-801a-410d-9473-3477d6384ef4.png",
+        "filename": "7d86ace3-801a-410d-9473-3477d6384ef4.png",
+        "added_at": 1763901056.8570902
+    },
+    {
+        "id": "34744d49-99ec-40ea-b297-34d3f71fddb6",
+        "category": "Accessory",
+        "gender": "Women's Fashion",
+        "image_path": "assets/wardrobe\\3db230ff-a9fb-45cc-b618-372eb8ba5a72.png",
+        "filename": "3db230ff-a9fb-45cc-b618-372eb8ba5a72.png",
+        "added_at": 1763901070.6396236
+    },
+    {
+        "id": "7dbbd652-28bb-4cb1-9427-d431481f1646",
+        "category": "Accessory",
+        "gender": "Women's Fashion",
+        "image_path": "assets/wardrobe\\1fc0de4f-4725-4452-b286-1faa5c0eb76a.png",
+        "filename": "1fc0de4f-4725-4452-b286-1faa5c0eb76a.png",
+        "added_at": 1763901080.651518
+    }
+]

@@ -1,0 +1,7 @@
+streamlit
+groq
+gTTS
+pytest
+pytest-mock
+duckduckgo-search
+Pillow
