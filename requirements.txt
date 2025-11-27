@@ -10,3 +10,4 @@ Pillow
 selenium
 webdriver-manager
 pytest
+duckduckgo-search
