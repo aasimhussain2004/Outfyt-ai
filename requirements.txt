@@ -11,3 +11,6 @@ selenium
 webdriver-manager
 pytest
 duckduckgo-search
+razorpay
+tavily-python
+ruff
