@@ -14,3 +14,4 @@ duckduckgo-search
 razorpay
 tavily-python
 ruff
+gradio_client
