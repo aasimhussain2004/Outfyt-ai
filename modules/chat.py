@@ -13,6 +13,7 @@ from gtts import gTTS
 from modules.auth import sign_in_required_dialog
 from modules.wardrobe import get_wardrobe_items
 from modules.planner import get_plan
+from modules.search import perform_search
 
 # Initialize Groq Client
 try:
@@ -221,6 +222,12 @@ def handle_chat():
                 for part in message["content"]:
                     if part['type'] == 'text':
                         st.markdown(part['text'])
+        
+        # Display Sources if available
+        if "sources" in message and message["sources"]:
+            with st.expander("🔍 Sources & References"):
+                for src in message["sources"]:
+                    st.markdown(f"- [{src.get('title', 'Source')}]({src.get('url', '#')})")
 
     # --- 2. Action Buttons (Middle) ---
     c1, c2, c3 = st.columns([1, 10, 1])
@@ -244,6 +251,12 @@ def handle_chat():
                     audio_prompt = transcribed_text
 
     # --- 3. Input Logic (Bottom) ---
+    # Search Toggle (Premium Only)
+    if st.session_state.get("is_premium", False):
+        st.toggle("🌐 Enable Web Search", key="enable_search")
+    else:
+        st.caption("🔒 Upgrade to unlock real-time fashion trends.")
+
     # Check for Voice Prompt OR Text Input
     prompt = st.chat_input("Ask for fashion advice...")
     
@@ -332,6 +345,15 @@ def handle_chat():
                             )
                             
                             # Add System Prompt
+                            # --- SEARCH INTEGRATION ---
+                            current_sources = []
+                            if st.session_state.get("enable_search", False):
+                                with st.spinner("🔍 Searching the web for trends..."):
+                                    search_results, raw_results = perform_search(prompt)
+                                    if search_results:
+                                        system_prompt += f"\n\n{search_results}\n\nINSTRUCTION: Use the above search results to answer the user's question about fashion trends."
+                                        current_sources = raw_results
+
                             messages_payload.append({"role": "system", "content": system_prompt})
 
                             # Add History (Last 10)
@@ -351,8 +373,18 @@ def handle_chat():
                             # 3. Display Response
                             st.markdown(response_text)
                             
+                            # Display Sources Immediately
+                            if current_sources:
+                                with st.expander("🔍 Sources & References"):
+                                    for src in current_sources:
+                                        st.markdown(f"- [{src.get('title', 'Source')}]({src.get('url', '#')})")
+                            
                             # 4. Append AI Response
-                            st.session_state.messages.append({"role": "assistant", "content": response_text})
+                            st.session_state.messages.append({
+                                "role": "assistant", 
+                                "content": response_text,
+                                "sources": current_sources
+                            })
                             
                             # 5. Rerun to Lock
                             # Increment DB Count (If signed in)

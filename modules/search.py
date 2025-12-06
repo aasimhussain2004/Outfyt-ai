@@ -41,3 +41,26 @@ def search_tavily(query):
     except Exception as e:
         # print(f"Tavily Error: {e}")
         return []
+
+def perform_search(query, max_results=3):
+    """
+    Executes a search and returns a formatted string for the LLM.
+    """
+    if not tavily_client:
+        return None
+
+    try:
+        # General Search for Trends
+        response = tavily_client.search(
+            query=f"{query} latest fashion trends 2024", 
+            search_depth="advanced",
+            max_results=max_results
+        )
+        
+        results_text = "### 🌐 Web Search Results:\n"
+        for res in response.get("results", []):
+            results_text += f"- **{res.get('title')}**: {res.get('content')} ({res.get('url')})\n"
+            
+        return results_text, response.get("results", [])
+    except Exception as e:
+        return f"Search Error: {e}", []

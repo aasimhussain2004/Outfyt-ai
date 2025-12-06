@@ -165,8 +165,13 @@ def check_wardrobe_limit(supabase, user_id):
                 return True # Premium = Unlimited
             
         # 2. Check Count (Free Tier Limit)
-        response = supabase.table('wardrobe').select("id", count='exact').eq('user_id', str(user_id)).execute()
-        count = response.count
+        # Use Supabase client to count items
+        count = 0
+        try:
+            res = supabase.table("wardrobe").select("*", count="exact").eq("user_id", str(user_id)).execute()
+            count = res.count
+        except:
+            pass
         
         if count < 5:
             return True
@@ -174,8 +179,14 @@ def check_wardrobe_limit(supabase, user_id):
         return False
     except Exception as e:
         # Log error if possible
-        return False # Fail safe (Block if error to prevent abuse, or True to be nice? User said "Do NOT return False" for missing user, but here we are in Exception)
-        # Actually, if exception, it's safer to return False usually, but for "new user" bug, we handled it above.
+        # st.error(f"Limit check error: {e}")
+        return False # Fail safe
+            
+        return False
+    except Exception as e:
+        # Log error if possible
+        # st.error(f"Limit check error: {e}")
+        return False # Fail safe
 
 def increment_message_count(user_id):
     """Add +1 to usage."""

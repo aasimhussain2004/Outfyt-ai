@@ -186,7 +186,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Initialize DB
-database.init_db()
+# database.init_db() # Removed for Supabase migration
 
 # Initialize Session & Auth (Returns dummy user_id=1)
 # Initialize Session & Auth (Returns dummy user_id=1)
@@ -317,16 +317,12 @@ if "razorpay_payment_link_status" in st.query_params:
             st.error(f"Payment verification failed: {e}")
 
 # --- Onboarding Check ---
-conn = database.get_connection()
 # Sync session state with DB if needed, but prioritize session state
 if not st.session_state.tutorial_completed:
     try:
-        with conn.session as s:
-            result = s.execute(
-                text("SELECT tutorial_completed FROM user_profiles WHERE user_id = :uid"),
-                {"uid": user_id}
-            ).fetchone()
-            if result and result[0]:
+        if database.supabase:
+            result = database.supabase.table("user_profiles").select("tutorial_completed").eq("user_id", str(user_id)).execute()
+            if result.data and result.data[0].get("tutorial_completed"):
                 st.session_state.tutorial_completed = True
     except Exception:
         pass 

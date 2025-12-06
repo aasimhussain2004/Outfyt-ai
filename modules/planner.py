@@ -9,10 +9,9 @@ import io
 import os
 import requests
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageOps, ImageEnhance
-from sqlalchemy import text
 # from duckduckgo_search import DDGS # Removed in favor of Tavily
 from groq import Groq
-from modules.database import get_connection
+from modules.database import supabase
 from modules.wardrobe import get_wardrobe_items
 
 # Initialize Groq Client
@@ -165,18 +164,24 @@ def display_outfit_planner():
 
 def save_plan(date_str, outfit_dict):
     try:
+        if not supabase: return False
+        
         # Add gender to the plan
         outfit_dict['gender'] = st.session_state.gender_mode
+        user_id = st.session_state.get("user_id", 1)
         
-        conn = get_connection()
-        with conn.session as s:
-            s.execute(
-                text("INSERT INTO planner (date, user_id, outfit_data) VALUES (:date, :user_id, :outfit_data) ON CONFLICT (date) DO UPDATE SET outfit_data = EXCLUDED.outfit_data"),
-                {"date": date_str, "user_id": 1, "outfit_data": json.dumps(outfit_dict)}
-            )
-            s.commit()
+        data = {
+            "date": date_str,
+            "user_id": str(user_id),
+            "outfit_data": json.dumps(outfit_dict)
+        }
+        
+        # Upsert into Supabase
+        supabase.table("planner").upsert(data).execute()
         
         # Update session state cache
+        if "planner" not in st.session_state:
+            st.session_state.planner = {}
         st.session_state.planner[date_str] = outfit_dict
         return True
     except Exception as e:
@@ -185,15 +190,19 @@ def save_plan(date_str, outfit_dict):
 
 def get_plan(date_str):
     # Try cache first
-    if date_str in st.session_state.planner:
+    if "planner" in st.session_state and date_str in st.session_state.planner:
         return st.session_state.planner[date_str]
         
     try:
-        conn = get_connection()
-        df = conn.query("SELECT outfit_data FROM planner WHERE date=:date AND user_id=1", params={"date": date_str}, ttl=0)
+        if not supabase: return None
         
-        if not df.empty:
-            plan = json.loads(df.iloc[0]['outfit_data'])
+        user_id = st.session_state.get("user_id", 1)
+        response = supabase.table("planner").select("outfit_data").eq("date", date_str).eq("user_id", str(user_id)).execute()
+        
+        if response.data:
+            plan = json.loads(response.data[0]['outfit_data'])
+            if "planner" not in st.session_state:
+                st.session_state.planner = {}
             st.session_state.planner[date_str] = plan
             return plan
         return None
@@ -469,10 +478,10 @@ def story_studio_dialog(plan, day_display):
 
 def delete_plan_day(date_str):
     try:
-        conn = get_connection()
-        with conn.session as s:
-            s.execute(text("DELETE FROM planner WHERE date=:date AND user_id=1"), {"date": date_str})
-            s.commit()
+        if not supabase: return False
+        
+        user_id = st.session_state.get("user_id", 1)
+        supabase.table("planner").delete().eq("date", date_str).eq("user_id", str(user_id)).execute()
         
         # Update cache
         if date_str in st.session_state.planner:
@@ -484,10 +493,10 @@ def delete_plan_day(date_str):
 
 def clear_all_plans():
     try:
-        conn = get_connection()
-        with conn.session as s:
-            s.execute(text("DELETE FROM planner WHERE user_id=1"))
-            s.commit()
+        if not supabase: return False
+        
+        user_id = st.session_state.get("user_id", 1)
+        supabase.table("planner").delete().eq("user_id", str(user_id)).execute()
         
         # Clear cache
         st.session_state.planner = {}
