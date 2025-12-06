@@ -16,4 +16,4 @@ tavily-python
 ruff
 gradio_client
 replicate
-websockets>=11.0
+websockets>=13.0
