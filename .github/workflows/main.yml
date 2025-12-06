@@ -35,5 +35,7 @@ jobs:
         ruff check . --exit-zero --statistics
 
     - name: Run Smoke Test
+      env:
+        PYTHONPATH: .
       run: |
         pytest tests/test_app_load.py
